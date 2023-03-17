@@ -1,0 +1,6 @@
+git+https://github.com/openai/whisper.git 
+#brew install portaudio
+openai
+requests
+keyboard
+pyaudio
