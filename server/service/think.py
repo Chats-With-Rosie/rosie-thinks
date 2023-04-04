@@ -10,7 +10,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 def generate_response(initial_prompt, prompt):
-    openai.api_key = "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"
+    openai.api_key = "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"
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=initial_prompt + prompt,
@@ -80,6 +80,6 @@ def think():
 
 # This block checks if the script is being run directly and not imported as a module
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5069)
 
   
