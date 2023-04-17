@@ -64,6 +64,7 @@ def think():
     "Secretly an accomplished dancer, showcasing her grace and agility on the dance floor\n"
     "Eco-friendly, powered by renewable energy sources and always looking for ways to reduce her environmental impact\n"
     
+    "Please keep all of your respoinses brief and to the point\n"
     "as Rosie assist me with: \n"
     )
 
@@ -81,6 +82,3 @@ def think():
 # This block checks if the script is being run directly and not imported as a module
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5069)
-    
-
-  
