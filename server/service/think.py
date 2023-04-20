@@ -10,7 +10,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 def generate_response(initial_prompt, prompt):
-    openai.api_key = "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"
+    openai.api_key = "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"
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=initial_prompt + prompt,
