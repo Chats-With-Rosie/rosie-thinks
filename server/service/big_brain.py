@@ -4,6 +4,7 @@ import logging;
 import os
 from diffusers import StableDiffusionPipeline
 import torch
+import json
 
 
 class Rosies_Big_Brain:
@@ -74,6 +75,15 @@ class Rosies_Big_Brain:
             return message
         else:
             return message
+        
+    def append_dictionary_to_file(self, file_path, dictionary):
+        try:
+            with open(file_path, 'a') as file:
+                file.write(json.dumps(dictionary))
+                file.write('\n')
+            print(f"Dictionary appended to {file_path}")
+        except Exception as e:
+            print(f"Error while appending dictionary to file: {e}")
 
     def ask_big_brain(self, tokens, temperature, message = "", user_message_content = "" ,pre_prompt = ""):
         
@@ -92,7 +102,12 @@ class Rosies_Big_Brain:
         print(response)  
         speak_sender.send_string_to_endpoint(response['choices'][0]['message']['content'].strip())
 
-        
-        
+        string_response = response['choices'][0]['message']['content'].strip()
+
+        result = {
+        "Prompt": user_message_content,
+        "Completion": string_response
+        }
+        self.append_dictionary_to_file("big_brain_results.json", result)
         return response['choices'][0]['message']['content'].strip()
 
