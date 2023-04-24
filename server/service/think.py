@@ -4,7 +4,7 @@ import keyboard
 import openai
 import requests
 import os
-
+import gpt-connection
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
