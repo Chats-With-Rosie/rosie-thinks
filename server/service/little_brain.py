@@ -17,12 +17,6 @@ from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import logging
 import os
 from pprint import pprint;
-import haystack;
-from haystack.document_stores import InMemoryDocumentStore;
-from haystack.nodes import BM25Retriever, FARMReader;
-from haystack.pipelines import ExtractiveQAPipeline;
-from haystack.pipelines.standard_pipelines import TextIndexingPipeline;
-from haystack.utils import fetch_archive_from_http;
 from send_to_speak import send_to_speak;
 from big_brain import Rosies_Big_Brain;
 from transformers import T5ForConditionalGeneration, T5Tokenizer;
@@ -74,49 +68,18 @@ class Rosies_Little_Brain:
         
         output = big_brain.ask_big_brain(3250, 0.2, message=message, user_message_content = "" ,pre_prompt = "")
         return output
-
-    def train_model(self, local_data_dir: str):
-        logging.basicConfig(format="%(levelname)s - %(name)s -  %(message)s", level=logging.WARNING)
-        logging.getLogger("haystack").setLevel(logging.INFO)
-
-        document_store = InMemoryDocumentStore(use_bm25=True)
-
-        files_to_index = [local_data_dir + "/" + f for f in os.listdir(local_data_dir)]
-        indexing_pipeline = TextIndexingPipeline(document_store)
-        indexing_pipeline.run_batch(file_paths=files_to_index)
-
-        retriever = BM25Retriever(document_store=document_store)
-        reader = FARMReader(model_name_or_path="deepset/roberta-base-squad2", use_gpu=False)
-
-        pipe = ExtractiveQAPipeline(reader, retriever)
         
-        return pipe 
-
-    def ask_little_brain_a_question(self, pipe, question: str):
-        prediction = pipe.run(
-            query=question,
-            params={
-                "Retriever": {"top_k": 10},
-                "Reader": {"top_k": 5}
-            }
-        )
-
-        # Check if the 'answers' key exists and if it contains at least one answer
-        if "answers" in prediction and len(prediction["answers"]) > 0:
-            # Access the first answer in the list (assuming it's an 'Answer' object)
-            answer = prediction["answers"][0]
-
-            # Access the 'answer' attribute if it exists in the 'Answer' object
-            if hasattr(answer, "answer"):
-                speak_sender = send_to_speak(self.speak_endpoint)
-                speak_sender.send_string_to_endpoint(answer.answer)
-                return answer.answer
-            else:
-                return "No 'answer' attribute found in the 'Answer' object"
-        else:
-            return "No answers found"
-        
-    def extract_answer_from_files(directory_path: str, question: str):
+            
+    def append_dictionary_to_file(self, file_path, dictionary):
+        try:
+            with open(file_path, 'a') as file:
+                file.write(json.dumps(dictionary))
+                file.write('\n')
+            print(f"Dictionary appended to {file_path}")
+        except Exception as e:
+            print(f"Error while appending dictionary to file: {e}")
+            
+    def extract_answer_from_files(self, directory_path: str, question: str):
         # Initialize the question-answering pipeline
         question_answerer = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
         
@@ -130,11 +93,13 @@ class Rosies_Little_Brain:
 
         # Get the answer to the question using the combined context
         result = question_answerer(question=question, context=context)
-        
+        train = {
+        "Prompt": question,
+        "Completion": result
+        }
+        self.append_dictionary_to_file("big_brain_results.json", result)
         # Return the answer
-        return result['answer']
-
-   
+        return result['answer'] 
 
     
     def generate_question(self, context):
@@ -194,8 +159,3 @@ class Rosies_Little_Brain:
                     json.dump(responses, file)
 
             return responses
-
-# speak_endpoint = 'http://localhost:5050/speak'
-# littlest_brain = Rosies_Little_Brain("context-folder/", speak_endpoint)
-# model = littlest_brain.train_model("context-folder/")
-# response = littlest_brain.ask_little_brain_a_question(model, question)

@@ -19,7 +19,6 @@ little_brain_instance = None
 big_brain_instance = None
 dot_point_list = None
 questions_list = None
-model = None
 
 
 
@@ -92,14 +91,11 @@ def start_up(file_name, file_location, speak_endpoint, api_key):
     dot_point_context_file = os.path.join(file_location, 'dot-point-context.txt')
     python_list = little_brain.get_context_as_python_list(context,dot_point_context_file)
     
-    
-    print(dot_point_list)
     question_file = os.path.join(file_location, 'question-context.txt')
     questions_list = little_brain.ask_questions_and_get_responses(python_list, question_file)
-    model = little_brain.train_model(file_location)
+    
 
-    return pre_prompt, little_brain, big_brain, dot_point_list, questions_list, model
-
+    return pre_prompt, little_brain, big_brain, dot_point_list, questions_list
 
 @app.route('/think', methods=['POST'])
 def think():
@@ -108,7 +104,6 @@ def think():
     global big_brain_instance
     global dot_point_list
     global questions_list
-    global model
     print("little brain questions list")
     print(questions_list)
     data_string = request.json.get('data')
@@ -116,12 +111,13 @@ def think():
     generator = Image_Generator("images/my_generated_image.jpg",api_key)
     image_generation_questions = generator.return_image_requests()
     if data_string:
-        if check_string_in_list(data_string, questions_list) or is_question_similar(data_string, questions_list):
+        if check_string_in_list(data_string, questions_list) or is_question_similar(data_string, questions_list, 0.4):
             print("Is a little brian question")
-            print(little_brain_instance.extract_answer_from_files("context-folder/", data_string))
             speak_sender = send_to_speak(speak_endpoint)
-            speak_sender.send_string_to_endpoint(little_brain_instance.extract_answer_from_files("context-folder/", data_string))
-            return little_brain_instance.ask_little_brain_a_question(model, data_string)
+            response = little_brain_instance.extract_answer_from_files("context-folder/", data_string)
+            speak_sender.send_string_to_endpoint(response)
+            print(response)
+            return 
         elif check_string_in_list(data_string, image_generation_questions) or is_question_similar(data_string, image_generation_questions, 0.5):
             speak_sender = send_to_speak(speak_endpoint)
             speak_sender.send_string_to_endpoint("Hmmmmm, bare with whilst I work my magic!")
@@ -136,5 +132,5 @@ def think():
 if __name__ == '__main__':
     speak_endpoint = 'http://localhost:5050/speak'
     api_key = os.environ.get('OPENAI_API_KEY')
-    pre_prompt, little_brain_instance, big_brain_instance, dot_point_list, questions_list, model = start_up("context-folder/context.txt", "context-folder/", speak_endpoint, api_key)
+    pre_prompt, little_brain_instance, big_brain_instance, dot_point_list, questions_list = start_up("context-folder/context.txt", "context-folder/", speak_endpoint, api_key)
     app.run(host='0.0.0.0', port=5869, debug=True)
