@@ -7,19 +7,13 @@ import openai
 from transformers import pipeline
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import os
-import requests
-from sentence_transformers import SentenceTransformer
 import json
-import random
 import json
 import random
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
-import logging
 import os
-from pprint import pprint;
 from send_to_speak import send_to_speak;
 from big_brain import Rosies_Big_Brain;
-from transformers import T5ForConditionalGeneration, T5Tokenizer;
 
 class Rosies_Little_Brain:
 
@@ -62,7 +56,7 @@ class Rosies_Little_Brain:
             "content": f"{context}"
         }
         ]
-        speak_endpoint = 'http://localhost:5050/speak'
+        speak_endpoint = os.environ.get('SPEAK_SERVICE') or 'http://speak_service:5050/speak'
         api_key = os.environ.get('OPENAI_API_KEY')
         big_brain = Rosies_Big_Brain( api_key, speak_endpoint)
         

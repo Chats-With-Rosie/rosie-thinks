@@ -1,10 +1,7 @@
-import pyaudio
 import wave
-import keyboard
 import openai
-import requests
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from big_brain import Rosies_Big_Brain
 from little_brain import Rosies_Little_Brain
 from visualiser import Image_Generator 
@@ -128,7 +125,7 @@ def think():
             print(response)
             return 
         elif check_string_in_list(data_string, image_generation_questions) or is_question_similar(data_string, image_generation_questions, 0.5):
-            speak_sender = send_to_speak(speak_endpoint,"http://localhost:5069/upload")
+            speak_sender = send_to_speak(speak_endpoint,os.environ.get('FRONT_END_IMAGE_UPLOAD') or "http://frontend:5069/upload")
             speak_sender.send_string_to_endpoint("Hmmmmm, bare with whilst I work my magic!")
             generated = generator.generate_image_from_prompt(data_string)
             generator.open_image_file()
@@ -145,7 +142,7 @@ def upload():
 
 
 if __name__ == '__main__':
-    speak_endpoint = 'http://localhost:5050/speak'
+    speak_endpoint = os.environ.get('SPEAK_SERVICE') or 'http://speak_service:5050/speak'
     api_key = os.environ.get('OPENAI_API_KEY')
     pre_prompt, little_brain_instance, big_brain_instance, dot_point_list, questions_list = start_up("context-folder/context.txt", "context-folder/", speak_endpoint, api_key)
-    app.run(host='0.0.0.0', port=5869, debug=True)
+    app.run(host='0.0.0.0', port=5080)
