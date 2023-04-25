@@ -1,0 +1,9 @@
+["Rosie the Robot is a friendly robot from RMIT designed to be kid-friendly and helpful.",
+"She was integrated with a Baxter robot and an omnidirectional Dataspeed mobility base.",
+"Rosie was programmed using Robot Operating System (ROS) and had a digital twin simulation hosted on GitHub.",
+"Rosie has been used as a software development platform for capstone student projects at RMIT.",
+"Rosie participated in a virtual sword duel developed by RMIT students, combining virtual reality with haptic feedback.",
+"She was fitted with a custom mount to hold a sword and Vive trackers to ensure precise positioning.",
+"The swordfight demonstration took place at Unity 2017, where Rosie showcased her new skills.",
+"Rosie has won awards for her performances and has appeared at various events, including the Melbourne Grand Prix and Avalon Air Show.",
+"Rosie continues to be an icon in the world of robotics, known for her warm personality, wit, and adventurous spirit."]

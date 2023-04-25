@@ -4,9 +4,13 @@ import keyboard
 import openai
 import requests
 import os
+import gpt-connection
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
 
 def generate_response(initial_prompt, prompt):
-    openai.api_key = "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"
+    openai.api_key = "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"
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=initial_prompt + prompt,
@@ -17,11 +21,25 @@ def generate_response(initial_prompt, prompt):
         presence_penalty=0.6,
         stop=[" Human:", " AI:"]
     )
-      
-    return response['choices'][0]['text']
 
-def main():
-    prompt = "Tell me something about yourself."
+    return response['choices'][0]['text'].strip()
+
+def send_string_to_endpoint(data_string, endpoint_url):
+    data = {"data": data_string}
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(endpoint_url, json=data, headers=headers)
+    
+
+    if response.status_code == 200:
+        print("Data sent successfully!")
+        return response.json()["response"]
+    else:
+        print(f"Error sending data. Status code: {response.status_code}")
+        return None
+
+@app.route('/think', methods=['POST'])
+def think():
+    data_string = request.json.get('data')
     initial_prompt = (
     "Imagine you are Rosie, the charming and robot from the Royal Melbourne Institute of Technology(RMIT) styled off of Rosie from the jetson.\n"
     "As a kid-friendly AI with a penchant for helping others and an expertise in light saber duels, please share some advice for balancing household chores, engaging in thrilling activities like attending the Melbourne Grand Prix and Avalon Air Show, and providing a safe and fun environment for children.\n"
@@ -46,14 +64,21 @@ def main():
     "Secretly an accomplished dancer, showcasing her grace and agility on the dance floor\n"
     "Eco-friendly, powered by renewable energy sources and always looking for ways to reduce her environmental impact\n"
     
+    "Please keep all of your respoinses brief and to the point\n"
     "as Rosie assist me with: \n"
     )
-    if prompt:
-        print(generate_response(initial_prompt, prompt))
-        
-         
+
+    if data_string:
+        print(f"Received string: {data_string}")
+        endpoint_url = "http://localhost:5050/speak"
+        response = generate_response(initial_prompt, data_string)
+        print(response)
+        send_string_to_endpoint(response, endpoint_url)
+        return jsonify({"response": response})
+    else:
+        return jsonify({"result": "error", "message": "No data received"}), 400
+     
 
 # This block checks if the script is being run directly and not imported as a module
 if __name__ == '__main__':
-    main()   
-  
+    app.run(host='0.0.0.0', port=5069)
