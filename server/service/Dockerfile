@@ -1,20 +1,21 @@
-# Base image
+# Use an official Python runtime as a parent image
 FROM python:3.9
 
-# Set working directory
+# Set the working directory to /app
 WORKDIR /app
 
-# Copy requirements file
-COPY requirements.txt .
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install requirements
-RUN python -m pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
-# Copy app files to the container
-COPY . .
+# Install any needed packages specified in requirements.txt
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
-# Expose port 5000 for Flask app
-EXPOSE 5869
+# Make port 80 available to the world outside this container
+EXPOSE 5080
 
-# Start Flask app
-CMD [ "python", "thinking.py" ]
+# Define environment variable
+ENV NAME World
+
+# Run app.py when the container launches
+CMD ["python", "thinking.py"]
+

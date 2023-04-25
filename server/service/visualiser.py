@@ -1,5 +1,3 @@
-from diffusers import StableDiffusionPipeline
-import torch
 import os
 import subprocess
 import requests
@@ -11,7 +9,7 @@ class Image_Generator:
         self.output_file_path = output_file_path
         self.api_key = api_key
     
-    def send_image_url_to_endpoint(self, image_url, endpoint='http://localhost:5069/upload'):
+    def send_image_url_to_endpoint(self, image_url, endpoint=os.environ.get('FRONT_END_IMAGE_UPLOAD') or 'http://frontend:5069/upload'):
         data = {"image_url": image_url}
         headers = {"Content-Type": "application/json"}
         response = requests.post(endpoint, json=data, headers=headers)
@@ -46,7 +44,6 @@ class Image_Generator:
             
     def open_image_file(self):
         if os.path.exists(self.output_file_path):
-            endpoint_url = "http://localhost:5069/upload"
             if os.name == 'nt':  # for Windows
                 os.startfile(self.output_file_path)
             elif os.name == 'posix':  # for Mac and Linux

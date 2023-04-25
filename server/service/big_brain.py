@@ -2,8 +2,6 @@ import openai;
 from send_to_speak import send_to_speak;
 import logging;
 import os
-from diffusers import StableDiffusionPipeline
-import torch
 import json
 
 
