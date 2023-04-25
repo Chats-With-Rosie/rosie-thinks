@@ -195,5 +195,7 @@ class Rosies_Little_Brain:
 
             return responses
 
-
-        
+# speak_endpoint = 'http://localhost:5050/speak'
+# littlest_brain = Rosies_Little_Brain("context-folder/", speak_endpoint)
+# model = littlest_brain.train_model("context-folder/")
+# response = littlest_brain.ask_little_brain_a_question(model, question)

@@ -122,7 +122,7 @@ def think():
             speak_sender = send_to_speak(speak_endpoint)
             speak_sender.send_string_to_endpoint(little_brain_instance.extract_answer_from_files("context-folder/", data_string))
             return little_brain_instance.ask_little_brain_a_question(model, data_string)
-        elif check_string_in_list(data_string, image_generation_questions) or is_question_similar(data_string, image_generation_questions):
+        elif check_string_in_list(data_string, image_generation_questions) or is_question_similar(data_string, image_generation_questions, 0.5):
             speak_sender = send_to_speak(speak_endpoint)
             speak_sender.send_string_to_endpoint("Hmmmmm, bare with whilst I work my magic!")
             generated = generator.generate_image_from_prompt(data_string)
