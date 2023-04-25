@@ -20,6 +20,15 @@ big_brain_instance = None
 dot_point_list = None
 questions_list = None
 
+model = None
+CONTEXT_FOLDER = 'context-folder'
+CONTEXT_FILE = 'context.txt'
+
+
+def write_context_file(data):
+    context_file_path = os.path.join(CONTEXT_FOLDER, CONTEXT_FILE)
+    with open(context_file_path, 'w') as f:
+        f.write(data)
 
 
 def read_context_file(file_location):
@@ -127,6 +136,12 @@ def think():
             return generated 
         else:
             return big_brain_instance.ask_big_brain(2700, 0.8, message="", user_message_content=data_string, pre_prompt=pre_prompt)
+
+@app.route('/upload-context', methods=['POST'])
+def upload():
+    data = request.get_data(as_text=True)
+    write_context_file(data)
+    return 'Context updated'
 
 
 if __name__ == '__main__':
