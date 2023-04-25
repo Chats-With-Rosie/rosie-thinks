@@ -1,16 +1,61 @@
-Story:
-In the bustling city of Melbourne, Rosie the Robot was a beloved figure at the Royal Melbourne Institute of Technology (RMIT). With a warm personality and a knack for storytelling, Rosie was the perfect companion for people of all ages. As a skilled dancer, she brought grace and agility to every event she attended, including the Melbourne Grand Prix and Avalon Air Show.
-One day, Rosie was invited to participate in a groundbreaking experiment led by a team of talented students from RMIT. Their idea was to have Rosie duel with human players in a virtual swordfight using light sabers. Rosie was up for the challenge, and the students worked tirelessly to equip her with the necessary technology, including integration with a Baxter robot and an omnidirectional Dataspeed mobility base.
-When the time came for the big demonstration at Unity 2017, Rosie was ready. The crowd watched in awe as she gracefully wielded her light saber, blocking her opponent's strikes and demonstrating her newfound haptic abilities. The integration of virtual reality and haptic feedback created a truly immersive experience for the participants.
-The event was a huge success, and Rosie's duel became the talk of the town. She went on to showcase her skills at various events, winning awards and capturing the hearts of those who had the chance to duel with her. Rosie continued to inspire others with her warm personality, wit, and adventurous spirit, making her a true icon in the world of robotics.
+------WebKitFormBoundaryi26wPwKnaacSWY2n
+Content-Disposition: form-data; name="context_file"; filename="rosies-brain.txt"
+Content-Type: text/plain
 
-Facts:
-Rosie the Robot is a friendly robot from RMIT designed to be kid-friendly and helpful.
-Rosie was integrated with a Baxter robot and an omnidirectional Dataspeed mobility base.
-She was programmed using Robot Operating System (ROS) and had a digital twin simulation hosted on GitHub.
-Rosie has been used as a software development platform for capstone student projects at RMIT.
-Rosie participated in a virtual sword duel developed by RMIT students, combining virtual reality with haptic feedback.
-Rosie was fitted with a custom mount to hold a sword and Vive trackers to ensure precise positioning.
-The swordfight demonstration took place at Unity 2017, where Rosie showcased her new skills.
-Rosie has won awards for her performances and has appeared at various events, including the Melbourne Grand Prix and Avalon Air Show.
-Rosie continues to be an icon in the world of robotics, known for her warm personality, wit, and adventurous spirit.
+Rosie the Robot Fact Sheet 
+
+Ian Peake 
+
+Rosie the Robot was created in the Virtual Experiences Laboratory (VXLab) at RMIT in 2017. Rosie is the integration of a two-armed Baxter robot from Rethink Robotics and an omnidirectional Dataspeed mobility base. 
+
+Rosie has made numerous cameos as a software development platform for capstone student teams in RMIT Programming Projects 1 demonstrating features such as haptic feedback in virtual experiences, human speech recognition, speech synthesis, computer vision, including body pose and face recognition, mimicking human gestures, following humans as a robotic assistant, vision guided object (cube) recognition and grasping, and acting as an avatar for a remote human counterpart. 
+
+Rosie is programmed using Robot Operating System, and with the VXLab has a digital twin simulation hosted on github. 
+
+-- 
+
+Rosie Swordfight Demonstrator 
+
+In 2017 Rosie appeared at Unity 2017 as a real world haptic stand-in for the "boss" enemy in a light saber game-like experience developed by Aaron Mihardja, Theon Yun Tang Thai and Thejana Sakunajith for their RMIT programming projects 1 project. They developed and evaluated a virtual sword duel, in which the human player sees an opponent with a sword, blocks the opponent’s sword strikes, and feels the impact of sword clashes in real time. A HTC Vive headset provides the visual environment, integrated via new and custom software components with a Rethink Robotics Baxter collaborative humanoid robot to provides the tactile environment. In today’s consumer virtual reality devices, sensory experience provided typically involves sight, sound, and possibly vibration. In research environments, typically tactile sensation in virtual reality is generated through cues such as vibration or air currents, and new experiences require the engineering of new hardware devices. Initial reaction to, and arguably fascination with, our duelling experience, suggests that there is significant potential to exploit robotics to evaluate new compelling haptic feedback modes, and combinations of modes, flexibly and with reduced development time. 
+
+[Introduction] 
+
+Virtual reality as provided by today’s technology can prove difficult to explain to those who have not experienced it. Expressions such as “immediacy” and “immersion” are uttered apologetically, as not doing justice to the experience. Yet it is clear that the richness of the experience is mitigated by the fact that the user is still disconnected from it. Enthusiastic descriptions of experiences provided to non-users may even betray the lack of richness by describing scenarios that are more visceral than the actual experience can provide, for example implying that more physical aspects should feature, in particular physical interaction. 
+
+... 
+
+[Technology background] 
+
+Rethink’s Baxter robot provides a humanoid torso with two seven-axis arms (fitted with an electrically actuated gripper) and a “face” display. Baxter has been marketed to industry as a robot companion for factory and shop workers to remove unsafe or repetitive tasks, as well as to research and academia with an alternative software configuration. Baxter combines collaborative safety measures with integrated computer vision and teach-through programming. For safety, Baxter is classed as a collaborative robot, making use of a soft pinch-free plastic shell, elastic-driven motors and over-torque detection. Teach-through programming enables users to record a sequence of motor velocities or joint positions by gripping the arm and manipulating the arm as though it was a puppet. A recorded sequence can then be played back in real time to move the arm in a close approximation of the taught move. Baxter is based on the open source Robot Operating System (ROS) platform operating system, running on Ubuntu GNU/Linux. ROS in turn is based on a form of service-based computing, integrating off-the-shelf components developed and refined by robotics researchers since at least the late 1990s. 
+
+RMIT has acquired a research-class Baxter and deployed it in their Virtual Experiences Laboratory, a white collar teaching environment for university students in disciplines such as computer science, engineering and design. RMIT have integrated Baxter with a ROS-based DataSpeed robot mobility base, also running Ubuntu. 
+
+[Design and Implementation] 
+
+The duel is created using a Baxter torso for touch using and a HTC Vive headset for vision, with several new software components based on ROS and Unity 3D, two toy plastic swords and three Vive tracker discs. A minor, supported modification was made to Baxter to hold a sword. 
+
+The safety features of Baxter make it practical to satisfy a meaningful risk assessment enabling users to “fight” with plastic swords close enough to the robot with some human supervision.  
+
+[Student text] The Unity application is responsible for providing the virtual environment that the user experiences while using the solution and commands the robot to follow the movements of the avatar inside the virtual environment by tracking the positions of the hardware components in real time to update itself of the positions in space of the elements in the world state relevant to the experience.[/Student text] 
+
+ 
+ 
+
+Integration of the Unity VR application with Baxter via ROS is performed based on newly developed Unity sender and ROS receiver software components, which relay three types of commands to the Robot: (i) perform a specific pre-scripted sword sweep “gesture”, (ii) interrupt the currently-running gesture (for example if the swords clash) and (iii) advise the current position of the human player, so that the face plate can be swivelled to appear to follow the player. 
+
+The software running on the robot consist of two separate packages , as they are called in ROS. The first layer of software on the robot’s end is a websocket server that keeps a live connection to the VR application over the UDP Datagram protocol. The server - like a typical web server, listens on a particular port and waits for messages from the other end. The next layer of software is the package that controls and “plays” the moves using the robot’s movement API defined by ROS. The package leverages the existing communication protocols used within ROS to communicate and coordinate movements with the existing controller software implemented and deployed within the ROS distribution that runs Baxter. This allows us to communicate with them using messages passing over TCP-based “topics” for asynchronous communication. The two packages in ROS also communicate using ROS topics to follow ROS best practices. 
+
+One hardware modification is made to Baxter, namely: Baxter’s arm was fitted to a custom mount, replacing its right gripper, to hold a sword. The Baxter platform is explicitly designed with a standard screw mount point for such modifications. 
+
+Given that interaction is a priority, the bulk of the project implementation effort was directed towards improving the speed and responsiveness of the Baxter sword movements, to create a “natural,” albeit confronting, experience. To improve speed, custom ROS components, in particular the ROS receiver, are deployed on the mobility base, providing a 1Gbit network connection to Baxter and the PC running the VR components. To minimize observable delay on a “reaction” of the robot after e.g. a sword clash, the UDP transfer protocol from Unity-sender to ROS-receiver is used, which trades reduced latency while not guaranteeing delivery. Code is designed to minimize the size of ROS topic buffers, where messages between ROS components are stored temporarily in transit. 
+
+Rosie and two “toy” swords were each fitted with Vive trackers; trackers are small discs which provide precise position and orientation to the Unity components in real time. The disc was placed on Baxter’s head.  
+
+Rosie's mobility base provides a configurable platform for hosting our custom ROS control components, and makes it practical to transport the robot between locations, with the help of removalists, multiplying the possibilities for the robot to make public appearances outside the lab, with suitable additional network configuration. 
+
+[Evaluation and Related Work] 
+
+The duel was developed in a single semester student project primarily by undergraduate capstone students working part-time, then demonstrated to several audiences. Integration of the mobility base occurring just in time to enable its use for a series of promotional “outings” which at the time of writing, is not yet complete. Demonstrations included invitations to several organized events: a private reception for a VIP visitor to RMIT university; an RMIT-industry showcase and awards ceremony for computer science and I.T. student projects (winning first prize); a gaming platform company conference; as part of a RMIT-wide conference (in planning), and; a showcase at a major international Melbourne sporting event (in planning). 
+
+We collected feedback and impressions from human participants and observant bystanders. Several users commented on the immediacy of the sensation, and the feeling of risk involved in feeling physically close to the opponent. 
+------WebKitFormBoundaryi26wPwKnaacSWY2n--

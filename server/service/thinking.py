@@ -120,7 +120,7 @@ def think():
     generator = Image_Generator("images/my_generated_image.jpg",api_key)
     image_generation_questions = generator.return_image_requests()
     if data_string:
-        if check_string_in_list(data_string, questions_list) or is_question_similar(data_string, questions_list, 0.4):
+        if check_string_in_list(data_string, questions_list) or is_question_similar(data_string, questions_list, 0.5):
             print("Is a little brian question")
             speak_sender = send_to_speak(speak_endpoint)
             response = little_brain_instance.extract_answer_from_files("context-folder/", data_string)
@@ -128,7 +128,7 @@ def think():
             print(response)
             return 
         elif check_string_in_list(data_string, image_generation_questions) or is_question_similar(data_string, image_generation_questions, 0.5):
-            speak_sender = send_to_speak(speak_endpoint)
+            speak_sender = send_to_speak(speak_endpoint,"http://localhost:5069/upload")
             speak_sender.send_string_to_endpoint("Hmmmmm, bare with whilst I work my magic!")
             generated = generator.generate_image_from_prompt(data_string)
             generator.open_image_file()

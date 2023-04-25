@@ -11,24 +11,17 @@ class Image_Generator:
         self.output_file_path = output_file_path
         self.api_key = api_key
     
-    def send_image_to_endpoint(self, image_filename, endpoint_url):
-        image_filepath = os.path.join('images', image_filename)  # Update this with the correct path to your image files
-
-        if not os.path.exists(image_filepath):
-            print("Error: image file not found.")
-            return None
-
-        with open(image_filepath, 'rb') as image_file:
-            files = {'file': (image_filename, image_file, 'image/jpeg')}  # Update the content type if you're using a different image format
-            response = requests.post(endpoint_url, files=files)
+    def send_image_url_to_endpoint(self, image_url, endpoint='http://localhost:5069/upload'):
+        data = {"image_url": image_url}
+        headers = {"Content-Type": "application/json"}
+        response = requests.post(endpoint, json=data, headers=headers)
 
         if response.status_code == 200:
-            print("Image file sent successfully!")
-            print(f"Response content: {response.content}")  # Add this line to print the response content
-            return response.json()["response"]
+            print("Image URL sent successfully!")
+            print(f"Response content: {response.content}")
         else:
-            print(f"Error sending image file. Status code: {response.status_code}")
-            return None
+            print(f"Error sending image URL. Status code: {response.status_code}")
+
         
     def generate_image_from_prompt(self, prompt):
         
@@ -42,6 +35,7 @@ class Image_Generator:
             )
 
             image_url = response['data'][0]['url']
+            self.send_image_url_to_endpoint(image_url)
             image_data = requests.get(image_url).content
 
             with open(self.output_file_path , 'wb') as output_file:
@@ -52,8 +46,7 @@ class Image_Generator:
             
     def open_image_file(self):
         if os.path.exists(self.output_file_path):
-            endpoint_url = os.environ.get('FRONT_END_IMAGE_URL')
-            self.send_image_to_endpoint(self.output_file_path, endpoint_url)
+            endpoint_url = "http://localhost:5069/upload"
             if os.name == 'nt':  # for Windows
                 os.startfile(self.output_file_path)
             elif os.name == 'posix':  # for Mac and Linux
