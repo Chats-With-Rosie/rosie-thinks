@@ -64,9 +64,9 @@ def generate_pre_prompt(context, pre_prompt_file, context_file):
     
     print("#####################PRE-PROMPT#####################")
    
-    pre_prompt = big_brain.big_brain_message_start_up_refine_context(context, context_file,2500, 0.1)
+    pre_prompt = big_brain.big_brain_message_start_up_refine_context(context, context_file,2100, 0.1)
     print(pre_prompt)
-    refined_prompt = refined_prompt = big_brain.big_brain_generate_context_prompt(pre_prompt, pre_prompt_file,2500, 0.1)
+    refined_prompt = refined_prompt = big_brain.big_brain_generate_context_prompt(pre_prompt, pre_prompt_file,2100, 0.1)
     print(refined_prompt)
     print("#####################END OF PRE-PROMPT#####################")
     if refined_prompt:
@@ -117,7 +117,7 @@ def think():
     generator = Image_Generator("images/my_generated_image.jpg",api_key)
     image_generation_questions = generator.return_image_requests()
     if data_string:
-        if check_string_in_list(data_string, questions_list) or is_question_similar(data_string, questions_list, 0.5):
+        if check_string_in_list(data_string, questions_list) or is_question_similar(data_string, questions_list, 0.6):
             print("Is a little brian question")
             speak_sender = send_to_speak(speak_endpoint)
             response = little_brain_instance.extract_answer_from_files("context-folder/", data_string)
@@ -125,7 +125,7 @@ def think():
             print(response)
             return 
         elif check_string_in_list(data_string, image_generation_questions) or is_question_similar(data_string, image_generation_questions, 0.5):
-            speak_sender = send_to_speak(speak_endpoint,os.environ.get('FRONT_END_IMAGE_UPLOAD') or "http://frontend:5069/upload")
+            speak_sender = send_to_speak(speak_endpoint,os.environ.get('FRONT_END_IMAGE_UPLOAD') or "http://frontend:5050/upload-image")
             speak_sender.send_string_to_endpoint("Hmmmmm, bare with whilst I work my magic!")
             generated = generator.generate_image_from_prompt(data_string)
             generator.open_image_file()
@@ -142,7 +142,7 @@ def upload():
 
 
 if __name__ == '__main__':
-    speak_endpoint = os.environ.get('SPEAK_SERVICE') or 'http://speak_service:5050/speak'
+    speak_endpoint = os.environ.get('SPEAK_SERVICE') or 'http://speak_service:5050/rosie-speak'
     api_key = os.environ.get('OPENAI_API_KEY')
     pre_prompt, little_brain_instance, big_brain_instance, dot_point_list, questions_list = start_up("context-folder/context.txt", "context-folder/", speak_endpoint, api_key)
-    app.run(host='0.0.0.0', port=5080)
+    app.run(host='0.0.0.0', port=5080, debug=True)
