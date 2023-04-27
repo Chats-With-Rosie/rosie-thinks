@@ -9,7 +9,7 @@ class Image_Generator:
         self.output_file_path = output_file_path
         self.api_key = api_key
     
-    def send_image_url_to_endpoint(self, image_url, endpoint=os.environ.get('FRONT_END_IMAGE_UPLOAD') or 'http://frontend:5069/upload'):
+    def send_image_url_to_endpoint(self, image_url, endpoint=os.environ.get('FRONT_END_IMAGE_UPLOAD') or 'http://frontend:5000/upload-image'):
         data = {"image_url": image_url}
         headers = {"Content-Type": "application/json"}
         response = requests.post(endpoint, json=data, headers=headers)
