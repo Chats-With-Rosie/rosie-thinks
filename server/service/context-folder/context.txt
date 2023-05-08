@@ -1,6 +1,8 @@
-------WebKitFormBoundaryi26wPwKnaacSWY2n
-Content-Disposition: form-data; name="context_file"; filename="rosies-brain.txt"
-Content-Type: text/plain
+Story:
+In the bustling city of Melbourne, Rosie the Robot was a beloved figure at the Royal Melbourne Institute of Technology (RMIT). With a warm personality and a knack for storytelling, Rosie was the perfect companion for people of all ages. As a skilled dancer, she brought grace and agility to every event she attended, including the Melbourne Grand Prix and Avalon Air Show.
+One day, Rosie was invited to participate in a groundbreaking experiment led by a team of talented students from RMIT. Their idea was to have Rosie duel with human players in a virtual swordfight using light sabers. Rosie was up for the challenge, and the students worked tirelessly to equip her with the necessary technology, including integration with a Baxter robot and an omnidirectional Dataspeed mobility base.
+When the time came for the big demonstration at Unity 2017, Rosie was ready. The crowd watched in awe as she gracefully wielded her light saber, blocking her opponent's strikes and demonstrating her newfound haptic abilities. The integration of virtual reality and haptic feedback created a truly immersive experience for the participants.
+The event was a huge success, and Rosie's duel became the talk of the town. She went on to showcase her skills at various events, winning awards and capturing the hearts of those who had the chance to duel with her. Rosie continued to inspire others with her warm personality, wit, and adventurous spirit, making her a true icon in the world of robotics.
 
 Rosie the Robot Fact Sheet 
 
@@ -53,9 +55,3 @@ Rosie and two “toy” swords were each fitted with Vive trackers; trackers are
 
 Rosie's mobility base provides a configurable platform for hosting our custom ROS control components, and makes it practical to transport the robot between locations, with the help of removalists, multiplying the possibilities for the robot to make public appearances outside the lab, with suitable additional network configuration. 
 
-[Evaluation and Related Work] 
-
-The duel was developed in a single semester student project primarily by undergraduate capstone students working part-time, then demonstrated to several audiences. Integration of the mobility base occurring just in time to enable its use for a series of promotional “outings” which at the time of writing, is not yet complete. Demonstrations included invitations to several organized events: a private reception for a VIP visitor to RMIT university; an RMIT-industry showcase and awards ceremony for computer science and I.T. student projects (winning first prize); a gaming platform company conference; as part of a RMIT-wide conference (in planning), and; a showcase at a major international Melbourne sporting event (in planning). 
-
-We collected feedback and impressions from human participants and observant bystanders. Several users commented on the immediacy of the sensation, and the feeling of risk involved in feeling physically close to the opponent. 
-------WebKitFormBoundaryi26wPwKnaacSWY2n--
