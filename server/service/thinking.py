@@ -8,6 +8,8 @@ from visualiser import Image_Generator
 from send_to_speak import send_to_speak# Don't forget to import LittleBrain
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
+from send_to_agent import ROS_Operator
+from send_to_agent import send_to_agent
 import numpy as np
 
 app = Flask(__name__)
@@ -50,6 +52,28 @@ def is_question_similar(new_question, question_list, threshold=0.7):
         if similarity_value > threshold:
             return True
     return False
+
+def get_similar_question(new_question, question_list, threshold=0.7):
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+
+    # Get embeddings for the new question and the existing questions
+    new_question_embedding = model.encode(new_question)
+    question_list_embeddings = model.encode(question_list)
+
+    # Calculate cosine similarity between the new question and each question in the list
+    similarities = cosine_similarity([new_question_embedding], question_list_embeddings)
+
+    # Find index of question with highest similarity score
+    max_index = np.argmax(similarities[0])
+
+    # Check if highest similarity is above the threshold
+    if similarities[0][max_index] > threshold:
+        return max_index
+
+    # No question found with similarity above threshold
+    return -1
+
+
 
 def check_string_in_list(lst, s):
     for item in lst:
@@ -116,6 +140,8 @@ def think():
     api_key = os.environ.get('OPENAI_API_KEY')
     generator = Image_Generator("images/my_generated_image.jpg",api_key)
     image_generation_questions = generator.return_image_requests()
+    ros_inputs = generator.return_possible_ros_requests()
+    actual_ros_inputs = generator.return_ros_requests()
     if data_string:
         if check_string_in_list(data_string, questions_list) or is_question_similar(data_string, questions_list, 0.6):
             print("Sent to little brain")
@@ -131,6 +157,13 @@ def think():
             generator.open_image_file()
             speak_sender.send_string_to_endpoint("Here you go... What do you think?")
             return generated 
+        elif check_string_in_list(data_string, ros_inputs) or is_question_similar(data_string, ros_inputs, 0.5):
+            ros_sender = send_to_agent(ros_endpoint,os.environ.get('ROS_AGENT_UPLOAD') or "http://http://ros_service:5058/ros-agent")
+            speak_sender.send_string_to_endpoint("Hmmmmm, let me think about that")
+            similar_string = ros_inputs[is_question_similar(data_string,ros_inputs)]
+            final_ros_input = actual_ros_inputs[is_question_similar(similar_string,actual_ros_inputs )]
+            ros_sender.send_string_to_endpoint(final_ros_input)
+
         else:
             return big_brain_instance.ask_big_brain(700, 0.8,message="", user_message_content=data_string, pre_prompt=pre_prompt)
 
@@ -144,6 +177,7 @@ def upload():
 
 if __name__ == '__main__':
     speak_endpoint = os.environ.get('SPEAK_SERVICE') or 'http://speak_service:5050/rosie-speak'
+    ros_endpoint = os.environ.get('ROS_AGENT') or 'http://ros_service:5058/ros-agent'
     api_key = os.environ.get('OPENAI_API_KEY')
     pre_prompt, little_brain_instance, big_brain_instance, dot_point_list, questions_list = start_up("context-folder/context.txt", "context-folder/", speak_endpoint, api_key)
     app.run(host='0.0.0.0', port=5080)
