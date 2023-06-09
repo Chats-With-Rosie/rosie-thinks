@@ -6,8 +6,15 @@ import json
 
 
 class Rosies_Big_Brain:
+    
+    #A class to interact with OpenAI's GPT model to refine text contexts, generate prompts, and send refined messages. 
+    #Also supports logging and storing results to a file.
+    
 
     def __init__(self, api_key, speak_endpoint):
+
+        #Initializes the instance with provided api_key and speak_endpoint. Also sets up logging.
+
         self.api_key = api_key
         self.speak_endpoint = speak_endpoint
         self.logger = logging.getLogger(__name__)
@@ -15,6 +22,8 @@ class Rosies_Big_Brain:
 
 
     def big_brain_message_start_up_refine_context(self, context, file_path, tokens, temperature):
+        #Reads context from file, refines it with AI, writes the refined context back to file and logs the process.
+
         if os.path.isfile(file_path):
             with open(file_path, 'r') as f:
                 refined_context = f.read()
@@ -36,7 +45,10 @@ class Rosies_Big_Brain:
 
         return refined_context
 
+
     def big_brain_generate_context_prompt(self, refined_context, file_path,tokens, temperature):
+        #Reads refined context from file, generates a prompt with AI, writes the prompt back to file, and logs the process.
+
         if os.path.isfile(file_path):
             with open(file_path, 'r') as f:
                 pre_prompt = f.read()
@@ -59,6 +71,8 @@ class Rosies_Big_Brain:
 
         return pre_prompt
     def big_brain_message(self, message, user_message_content, pre_prompt=""):
+        #Returns a formatted message with a pre_prompt and user_message_content.
+
         if len(pre_prompt) > 3:
             message = [
                 {
@@ -75,6 +89,8 @@ class Rosies_Big_Brain:
             return message
         
     def append_dictionary_to_file(self, file_path, dictionary):
+        #Appends a dictionary to a file in JSON format.
+
         try:
             with open(file_path, 'a') as file:
                 file.write(json.dumps(dictionary))
@@ -84,6 +100,9 @@ class Rosies_Big_Brain:
             print(f"Error while appending dictionary to file: {e}")
 
     def ask_big_brain(self, tokens, temperature, message = "", user_message_content = "" ,pre_prompt = ""):
+        
+        # Communicates with the OpenAI GPT model to generate responses, logs the response to an endpoint, and saves the results to a file.
+
         
         speak_sender = send_to_speak(self.speak_endpoint)
         speak_sender.send_string_to_endpoint("Hmmmmm, let me think about that for a second!")

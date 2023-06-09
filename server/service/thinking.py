@@ -10,31 +10,34 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
+# Initializes a Flask application
 app = Flask(__name__)
+
+# Global variables to hold values that need to be accessible throughout the application
 pre_prompt = None
 little_brain_instance = None
 big_brain_instance = None
 dot_point_list = None
 questions_list = None
 
-model = None
-CONTEXT_FOLDER = 'context-folder'
-CONTEXT_FILE = 'context.txt'
+model = None # Placeholder for a SentenceTransformer model
+CONTEXT_FOLDER = 'context-folder'   # Folder where context files are stored
+CONTEXT_FILE = 'context.txt' # File where context text is stored
 
 
-def write_context_file(data):
+def write_context_file(data): # Writes data to the context file
     context_file_path = os.path.join(CONTEXT_FOLDER, CONTEXT_FILE)
     with open(context_file_path, 'w') as f:
         f.write(data)
 
 
-def read_context_file(file_location):
+def read_context_file(file_location):  # Reads the contents of a file
     with open(file_location, "r") as file:
         file_contents = file.read()
     return file_contents
 
 
-def is_question_similar(new_question, question_list, threshold=0.7):
+def is_question_similar(new_question, question_list, threshold=0.7):   # Checks if a question is similar to others in a list
     model = SentenceTransformer('all-MiniLM-L6-v2')
 
     # Get embeddings for the new question and the existing questions
@@ -51,14 +54,14 @@ def is_question_similar(new_question, question_list, threshold=0.7):
             return True
     return False
 
-def check_string_in_list(lst, s):
+def check_string_in_list(lst, s):   # Checks if a string is in a list of strings
     for item in lst:
         if item in s:
             return True
     return False
  
 
-def generate_pre_prompt(context, pre_prompt_file, context_file):
+def generate_pre_prompt(context, pre_prompt_file, context_file):  # Generates a pre-prompt using the "big brain"
 
     big_brain = Rosies_Big_Brain(api_key, speak_endpoint)
     
@@ -74,7 +77,7 @@ def generate_pre_prompt(context, pre_prompt_file, context_file):
     else:
         return None
 
-def start_up(file_name, file_location, speak_endpoint, api_key):
+def start_up(file_name, file_location, speak_endpoint, api_key):  # Starts the application, initializing the "little brain" and "big brain"
     print("#####################START-UP#####################")
     print("#####################START OF CONTEXT#####################")
     speak_sender = send_to_speak(speak_endpoint)
@@ -104,7 +107,7 @@ def start_up(file_name, file_location, speak_endpoint, api_key):
     return pre_prompt, little_brain, big_brain, dot_point_list, questions_list
 
 @app.route('/think', methods=['POST'])
-def think():
+def think():  # Endpoint that receives data to think about and determines where to send it for processing
     global pre_prompt
     global little_brain_instance
     global big_brain_instance
@@ -135,7 +138,7 @@ def think():
             return big_brain_instance.ask_big_brain(700, 0.8,message="", user_message_content=data_string, pre_prompt=pre_prompt)
 
 @app.route('/upload-context', methods=['POST'])
-def upload():
+def upload():  # Endpoint that receives and updates the context
     data = request.get_data(as_text=True)
     write_context_file(data)
     

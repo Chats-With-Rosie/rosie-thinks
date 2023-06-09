@@ -5,11 +5,14 @@ import openai
 
 
 class Image_Generator:
+    #A class for generating and managing images using OpenAI's Image API.
     def __init__(self,output_file_path, api_key):
+        # Initializes the instance with the output file path and the OpenAI API key.
         self.output_file_path = output_file_path
         self.api_key = api_key
     
     def send_image_url_to_endpoint(self, image_url, endpoint=os.environ.get('FRONT_END_IMAGE_UPLOAD') or 'http://frontend:5000/upload-image'):
+        #Sends the image URL to the specified endpoint.
         data = {"image_url": image_url}
         headers = {"Content-Type": "application/json"}
         response = requests.post(endpoint, json=data, headers=headers)
@@ -22,7 +25,7 @@ class Image_Generator:
 
         
     def generate_image_from_prompt(self, prompt):
-        
+        #Generates an image based on the provided prompt using OpenAI's Image API.
         openai.api_key = self.api_key
 
         try:
@@ -43,6 +46,7 @@ class Image_Generator:
             print(f"Error: {str(e)}")
             
     def open_image_file(self):
+        #Opens the image file if it exists.
         if os.path.exists(self.output_file_path):
             if os.name == 'nt':  # for Windows
                 os.startfile(self.output_file_path)
@@ -53,7 +57,8 @@ class Image_Generator:
     
     def return_image_requests(self):
    
-
+        #Returns a list of image requests that can be used in prompts.
+        
         image_requests = [
             "generate an image of",
             "show me an image of",
